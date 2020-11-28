@@ -1,6 +1,6 @@
 use std::ops;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Vec3 {
     pub x: f32,
     pub y: f32,
@@ -8,6 +8,10 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        Vec3 { x, y, z }
+    }
+
     #[inline]
     pub fn length(&self) -> f32 {
         self.squared_length().sqrt()
@@ -82,8 +86,8 @@ impl ops::Mul for Vec3 {
     fn mul(self, other: Self) -> Self {
         Self {
             x: self.x * other.x,
-            y: self.y + other.y,
-            z: self.z + other.z,
+            y: self.y * other.y,
+            z: self.z * other.z,
         }
     }
 }
@@ -94,8 +98,8 @@ impl ops::Mul<f32> for Vec3 {
     fn mul(self, scalar: f32) -> Self {
         Self {
             x: self.x * scalar,
-            y: self.y + scalar,
-            z: self.z + scalar,
+            y: self.y * scalar,
+            z: self.z * scalar,
         }
     }
 }
