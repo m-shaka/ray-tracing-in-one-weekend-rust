@@ -67,6 +67,18 @@ impl ops::Add for Vec3 {
     }
 }
 
+impl ops::Add<f32> for Vec3 {
+    type Output = Self;
+    #[inline]
+    fn add(self, scalar: f32) -> Self {
+        Self {
+            x: self.x + scalar,
+            y: self.y + scalar,
+            z: self.z + scalar,
+        }
+    }
+}
+
 impl ops::Sub for Vec3 {
     type Output = Self;
 
@@ -76,6 +88,18 @@ impl ops::Sub for Vec3 {
             x: self.x - other.x,
             y: self.y - other.y,
             z: self.z - other.z,
+        }
+    }
+}
+
+impl ops::Sub<f32> for Vec3 {
+    type Output = Self;
+    #[inline]
+    fn sub(self, scalar: f32) -> Self {
+        Self {
+            x: self.x - scalar,
+            y: self.y - scalar,
+            z: self.z - scalar,
         }
     }
 }
