@@ -1,20 +1,8 @@
+use ray_tracer::hit_list;
 use ray_tracer::hitable;
 use ray_tracer::ray::Ray;
 use ray_tracer::vec3::Vec3;
 use std::io::{self, Write};
-
-fn hit_sphare(center: Vec3, radius: f32, r: Ray) -> f32 {
-    let oc = r.origin() - center;
-    let a = r.direction().dot(r.direction());
-    let b = r.direction().dot(oc) * 2.;
-    let c = oc.dot(oc) - radius * radius;
-    let discriminant = b * b - 4. * a * c;
-    if discriminant < 0. {
-        -1.0
-    } else {
-        (-b - discriminant.sqrt()) / (2. * a)
-    }
-}
 
 fn color<T: hitable::Hitable>(ray: Ray, world: &T) -> Vec3 {
     if let Some(rec) = world.hit(ray, 0., std::f32::MAX) {
@@ -34,11 +22,10 @@ fn main() {
     let horizontal = Vec3::new(4., 0., 0.);
     let vertical = Vec3::new(0., 2., 0.);
     let origin = Vec3::new(0., 0., 0.);
-    let world = hitable::HitList {
-        list: vec![
-            Box::new(hitable::Sphere::new(Vec3::new(0., 0., -1.), 0.5)),
-            Box::new(hitable::Sphere::new(Vec3::new(0., -100.5, -1.), 100.)),
-        ],
+
+    let world = hit_list! {
+        hitable::Sphere::new(Vec3::new(0., 0., -1.), 0.5),
+        hitable::Sphere::new(Vec3::new(0., -100.5, -1.), 100.)
     };
     for j in (0..ny).rev() {
         for i in 0..nx {

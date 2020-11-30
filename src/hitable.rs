@@ -57,6 +57,15 @@ pub struct HitList {
     pub list: Vec<Box<dyn Hitable>>,
 }
 
+#[macro_export]
+macro_rules! hit_list {
+    ($($e: expr),*) => {{
+        let mut v: Vec<Box<dyn crate::hitable::Hitable>> = vec![];
+        $(v.push(Box::new($e));)*
+        crate::hitable::HitList {list: v}
+    }};
+}
+
 impl Hitable for HitList {
     fn hit(&self, r: Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut res = None;
