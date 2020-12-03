@@ -4,7 +4,7 @@ use ray_tracer::hit_list;
 use ray_tracer::hitable;
 use ray_tracer::ray::Ray;
 use ray_tracer::vec3::Vec3;
-use std::io::{self, Write};
+use std::io::{self, BufWriter, Write};
 
 fn random_in_unit_sphere() -> Vec3 {
     let between = Uniform::new(0., 1.);
@@ -33,7 +33,8 @@ fn color<T: hitable::Hitable>(ray: Ray, world: &T) -> Vec3 {
 }
 
 fn main() {
-    let mut stdout = io::stdout();
+    let stdout = io::stdout();
+    let mut stdout = BufWriter::new(stdout.lock());
     let nx = 200;
     let ny = 100;
     let ns = 100;
