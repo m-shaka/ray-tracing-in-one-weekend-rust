@@ -1,6 +1,5 @@
 use rand::distributions::{Distribution, Uniform};
 use ray_tracer::camera::Camera;
-use ray_tracer::hit_list;
 use ray_tracer::hitable;
 use ray_tracer::ray::Ray;
 use ray_tracer::vec3::Vec3;
@@ -22,8 +21,8 @@ fn random_in_unit_sphere() -> Vec3 {
     return p;
 }
 
-fn color<T: hitable::Hitable>(ray: Ray, world: &T) -> Vec3 {
-    if let Some(rec) = world.hit(ray, 0.001, std::f32::MAX) {
+fn color(ray: Ray, world: &[&dyn hitable::Hitable]) -> Vec3 {
+    if let Some(rec) = hitable::hit(world, ray, 0.001, std::f32::MAX) {
         let target = rec.p + rec.normal + random_in_unit_sphere();
         return color(Ray::new(rec.p, target - rec.p), world) * 0.5;
     }
@@ -40,10 +39,11 @@ fn main() {
     let ns = 100;
     write!(stdout, "P3\n{} {}\n255\n", nx, ny).unwrap();
     let cam = Camera::new();
-    let world = hit_list! {
-        hitable::Sphere::new(Vec3::new(0., 0., -1.), 0.5),
-        hitable::Sphere::new(Vec3::new(0., -100.5, -1.), 100.)
-    };
+
+    let s1 = hitable::Sphere::new(Vec3::new(0., 0., -1.), 0.5);
+    let s2 = hitable::Sphere::new(Vec3::new(0., -100.5, -1.), 100.);
+    let world: Vec<&dyn hitable::Hitable> = vec![&s1, &s2];
+
     let between = Uniform::new(0., 1.);
     let mut rng = rand::thread_rng();
     for j in (0..ny).rev() {
