@@ -41,12 +41,12 @@ fn main() {
     let s3 = hitable::Sphere::new(
         Vec3::new(1., 0., -1.),
         0.5,
-        material::Metal::new(Vec3::new(0.8, 0.6, 0.2)),
+        material::Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.3),
     );
     let s4 = hitable::Sphere::new(
         Vec3::new(-1., 0., -1.),
         0.5,
-        material::Metal::new(Vec3::new(0.8, 0.8, 0.8)),
+        material::Metal::new(Vec3::new(0.8, 0.8, 0.8), 1.0),
     );
 
     let world: Vec<&dyn hitable::Hitable> = vec![&s1, &s2, &s3, &s4];

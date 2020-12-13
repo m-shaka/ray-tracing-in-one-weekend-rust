@@ -47,18 +47,22 @@ fn random_in_unit_sphere() -> Vec3 {
 
 pub struct Metal {
     albedo: Vec3,
+    fuzz: f32,
 }
 
 impl Metal {
-    pub fn new(albedo: Vec3) -> Self {
-        Self { albedo }
+    pub fn new(albedo: Vec3, fuzz: f32) -> Self {
+        Self {
+            albedo,
+            fuzz: if fuzz < 1. { fuzz } else { 1.0 },
+        }
     }
 }
 
 impl Material for Metal {
     fn scatter(&self, r_in: Ray, rec: HitRecord) -> Option<(Vec3, Ray)> {
         let reflected = reflect(r_in.direction(), rec.normal);
-        let scattered = Ray::new(rec.p, reflected);
+        let scattered = Ray::new(rec.p, reflected + random_in_unit_sphere() * self.fuzz);
         if scattered.direction().dot(rec.normal) > 0. {
             Some((self.albedo, scattered))
         } else {
